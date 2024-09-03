@@ -18,9 +18,9 @@ namespace RoomBookingApp.Persistence
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Room>().HasData(
-                new Room { Id = 1, Name = "Room A" },
-                new Room { Id = 2, Name = "Room B" },
-                new Room { Id = 3, Name = "Room C" }
+                new Room { Id = 1, Name = "Room A", Price = 50, Currency = "BGN" },
+                new Room { Id = 2, Name = "Room B", Price = 80, Currency = "BGN" },
+                new Room { Id = 3, Name = "Room C", Price = 100, Currency = "BGN" }
                 );
         }
     }

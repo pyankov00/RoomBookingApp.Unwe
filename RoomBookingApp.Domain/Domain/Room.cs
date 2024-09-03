@@ -7,6 +7,10 @@ namespace RoomBookingApp.Core.Domain
 
 		public string Name { get; set; }
 
+		public int Price { get; set; }
+
+		public string Currency { get; set; }
+
 		public List<RoomBooking> RoomBookings { get; set; }
 	}
 }
