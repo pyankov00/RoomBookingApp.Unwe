@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RoomBookingApp.Api.Controllers;
+using RoomBookingApp.Core.Domain;
 using RoomBookingApp.Core.Enums;
 using RoomBookingApp.Core.Models;
 using RoomBookingApp.Core.Processors;
@@ -48,5 +49,53 @@ namespace RoomBookingApp.Api.Tests
             _roomBookingProcessor.Verify(x => x.BookRoom(_request), Times.Exactly(expectedMethodCalls));
 
         }
+
+        [Fact]
+        public void GetAvailableRoomsDateInThePastReturnsBadRequest()
+        {
+            // Arrange
+            DateTime pastDate = DateTime.Now.AddDays(-1);
+
+            // Act
+            var result = _controller.GetAvailableRooms(pastDate);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Date Must be In The Future", badRequestResult.Value);
+        }
+
+        [Fact]
+        public void GetAvailableRoomsTodaysDateReturnsOkWithAvailableRooms()
+        {
+            // Arrange
+            DateTime todayDate = DateTime.Now.Date;
+            var availableRooms = new List<Room>(); // Assuming Room is a model class
+            _roomBookingProcessor.Setup(x => x.GetAvailableRooms(todayDate)).Returns(availableRooms);
+
+            // Act
+            var result = _controller.GetAvailableRooms(todayDate);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(availableRooms, okResult.Value);
+        }
+
+        [Fact]
+        public void GetAvailableRoomsDateInTheFutureReturnsOkWithAvailableRooms()
+        {
+            // Arrange
+            DateTime futureDate = DateTime.Now.AddDays(1);
+            var availableRooms = new List<Room>(); // Assuming Room is a model class
+            _roomBookingProcessor.Setup(x => x.GetAvailableRooms(futureDate)).Returns(availableRooms);
+
+            // Act
+            var result = _controller.GetAvailableRooms(futureDate);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(availableRooms, okResult.Value);
+        }
+
+
     }
 }

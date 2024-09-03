@@ -47,6 +47,9 @@ namespace RoomBookingApp.Core.Processors
             return result;
         }
 
+        public IEnumerable<Room> GetAvailableRooms(DateTime date)
+         => _roomBookingService.GetAvailbaleRooms(date);
+
         private TRoomBooking CreateRoomBookingObject<TRoomBooking>(RoomBookingRequest roomBookingRequest)
             where TRoomBooking : RoomBookingBase, new()
         {
