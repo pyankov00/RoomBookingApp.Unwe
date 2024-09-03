@@ -19,9 +19,9 @@ namespace RoomBookingApp.Core.Tests
                 .Options;
 
             using var context = new RoomBookingAppDbContext(options);
-            context.Add(new Room { Id = 1, Name = "Room 1" });
-            context.Add(new Room { Id = 2, Name = "Room 2" });
-            context.Add(new Room { Id = 3, Name = "Room 3" });
+            context.Add(new Room { Id = 1, Name = "Room 1", Price = 60, Currency = "BGN" });
+            context.Add(new Room { Id = 2, Name = "Room 2", Price = 60, Currency = "BGN" });
+            context.Add(new Room { Id = 3, Name = "Room 3", Price = 60, Currency = "BGN" });
 
             context.Add(new RoomBooking { RoomId = 1, Date = date, Email = "test@abv.bg", FullName = "TestTestov" });
             context.Add(new RoomBooking { RoomId = 2, Date = date.AddDays(-1), Email = "test@abv.bg", FullName = "TestTestov" });
