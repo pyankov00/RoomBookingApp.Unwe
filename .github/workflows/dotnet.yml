@@ -26,3 +26,10 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Scan
+      run: dotnet sonarscanner begin /k:"pyankov00_RoomBookingApp.Unwe"
+           /d:sonar.token="d1f93edb1d335b4833e3c891bc1aa863556569a9"
+           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+           dotnet build --no-incremental
+           dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+           dotnet sonarscanner end /d:sonar.token="d1f93edb1d335b4833e3c891bc1aa863556569a9"
