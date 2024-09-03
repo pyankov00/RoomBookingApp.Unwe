@@ -49,7 +49,7 @@ namespace RoomBookingApp.Core.Tests
                 .UseInMemoryDatabase("ShouldSaveTest")
                 .Options;
 
-            var roomBooking = new RoomBooking { RoomId = 1, Date = new DateTime(2021, 06, 09) };
+            var roomBooking = new RoomBooking { RoomId = 1, Date = new DateTime(2021, 06, 09), Email = "test@abv.bg", FullName = "TestTestov" };
 
             using var context = new RoomBookingAppDbContext(options);
             var roomBookingService = new RoomBookingService(context);
