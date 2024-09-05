@@ -36,7 +36,7 @@ jobs:
       run: cat ./TestResults/coverage.cobertura.xml
 
     - name: Begin SonarCloud Analysis
-      run: dotnet sonarscanner begin /k:"pyankov00_RoomBookingApp.Unwe" /o:"pyankov00" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./TestResults/coverage.cobertura.xml"
+      run: dotnet sonarscanner begin /k:"pyankov00_RoomBookingApp.Unwe" /o:"pyankov00" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.coverageReportPaths="./TestResults/**/coverage.cobertura.xml"
 
     - name: Build for SonarCloud
       run: dotnet build --no-incremental
@@ -44,7 +44,6 @@ jobs:
     - name: End SonarCloud Analysis
       run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-    # Move Upload Test Results to the end
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       with:
