@@ -109,7 +109,7 @@ namespace RoomBookingApp.Api.Tests
             var result = _controller.GetRoomBookings(validDate);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
+            var okResult = Assert.IsType<OkObjectResult>(result); 
             Assert.Equal(_roomBookings, okResult.Value);
             _roomBookingProcessor.Verify(x => x.GetRoomBookings(validDate), Times.Once);
         }
