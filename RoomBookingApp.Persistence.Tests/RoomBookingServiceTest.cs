@@ -69,7 +69,7 @@ namespace RoomBookingApp.Core.Tests
             var date = new DateTime(2021, 02, 02);
 
             var options = new DbContextOptionsBuilder<RoomBookingAppDbContext>()
-                .UseInMemoryDatabase("AvailableRoomTest")
+                .UseInMemoryDatabase("RoomBookingTests")
                 .Options;
 
             using var context = new RoomBookingAppDbContext(options);
