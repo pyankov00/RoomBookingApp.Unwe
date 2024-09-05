@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using RoomBookingApp.Core.Processors;
@@ -8,6 +9,7 @@ using RoomBookingApp.Persistence.Repositories;
 
 namespace RoomBookingApp.Api;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
     public static void Main(string[] args)

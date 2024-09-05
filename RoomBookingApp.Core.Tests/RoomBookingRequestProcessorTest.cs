@@ -14,6 +14,7 @@ namespace RoomBookingApp.Core.Tests
         private RoomBookingRequest _request;
         private Mock<IRoomBookingService> _roomBookingServiceMock;
         private List<Room> _availableRooms;
+        private List<RoomBooking> _roomBookings;
 
         public RoomBookingRequestProcessorTest()
         {
@@ -24,10 +25,13 @@ namespace RoomBookingApp.Core.Tests
                 Date = new DateTime(2023, 1, 1)
             };
 
-            _availableRooms = new List<Room>() { new Room() { Id = 1 } };
+            _availableRooms = new List<Room>() { new Room() { Id = 1 }, new Room() { Id = 2 } };
+            _roomBookings = new List<RoomBooking>() { new RoomBooking { RoomId = _availableRooms[1].Id, Date = _request.Date } };
             _roomBookingServiceMock = new Mock<IRoomBookingService>();
             _roomBookingServiceMock.Setup(q => q.GetAvailbaleRooms(_request.Date))
                 .Returns(_availableRooms);
+            _roomBookingServiceMock.Setup(q => q.GetRoomBookings(_request.Date))
+                .Returns(_roomBookings);
 
             _processor = new RoomBookingRequestProcessor(_roomBookingServiceMock.Object);
         }
@@ -117,6 +121,20 @@ namespace RoomBookingApp.Core.Tests
 
             var result = _processor.BookRoom(_request);
             result.RoomBookingId.ShouldBe(roomBookingId);
+        }
+
+        [Fact]
+        public void ShouldReturnAvailableRooms()
+        {
+            var result = _processor.GetAvailableRooms(_request.Date).ToList();
+            Assert.Equal(_availableRooms, result);
+        }
+
+        [Fact]
+        public void ShouldReturnRoomBookings()
+        {
+            var result = _processor.GetRoomBookings(_request.Date).ToList();
+            Assert.Equal(_roomBookings, result);
         }
     }
     

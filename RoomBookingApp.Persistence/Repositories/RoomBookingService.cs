@@ -20,6 +20,8 @@ namespace RoomBookingApp.Persistence.Repositories
             return availableRooms;
         }
 
+        public IEnumerable<RoomBooking> GetRoomBookings(DateTime date) => _context.RoomBookings.Where(x => x.Date.Date == date.Date).ToList();
+
         public void Save(RoomBooking roomBooking)
         {
             _context.Add(roomBooking);

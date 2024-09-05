@@ -42,6 +42,12 @@ namespace RoomBookingApp.Api.Controllers
 
             return Ok(_roomBookingProcessor.GetAvailableRooms(date));
         }
+
+        [HttpGet("/roomBookings")]
+        public IActionResult GetRoomBookings([FromQuery] DateTime date)
+        {
+            return Ok(_roomBookingProcessor.GetRoomBookings(date));
+        }
     }
 }
 

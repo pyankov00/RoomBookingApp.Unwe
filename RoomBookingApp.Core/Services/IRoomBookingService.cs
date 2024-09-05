@@ -7,6 +7,8 @@ namespace RoomBookingApp.Core.Services
 		void Save(RoomBooking roomBooking);
 
 		IEnumerable<Room> GetAvailbaleRooms(DateTime date);
+
+		IEnumerable<RoomBooking> GetRoomBookings(DateTime date);
 	}
 }
 

@@ -15,6 +15,7 @@ namespace RoomBookingApp.Api.Tests
         private readonly RoomBookingController _controller;
         private readonly RoomBookingRequest _request;
         private readonly RoomBokingResult _result;
+        private readonly List<RoomBooking> _roomBookings = new List<RoomBooking>();
 
         public RoomBookingControllerTests()
         {
@@ -22,8 +23,10 @@ namespace RoomBookingApp.Api.Tests
             _controller = new RoomBookingController(_roomBookingProcessor.Object);
             _request = new RoomBookingRequest();
             _result = new RoomBokingResult();
+            _roomBookings.Add(new RoomBooking { RoomId = 1, Date = new DateTime(2021, 06, 09), Email = "test@abv.bg", FullName = "TestTestov" });
 
             _roomBookingProcessor.Setup(x => x.BookRoom(_request)).Returns(_result);
+            _roomBookingProcessor.Setup(x => x.GetRoomBookings(DateTime.UtcNow)).Returns(_roomBookings);
         }
 
         [Theory]
@@ -96,6 +99,19 @@ namespace RoomBookingApp.Api.Tests
             Assert.Equal(availableRooms, okResult.Value);
         }
 
+        [Fact]
+        public void GetRoomBookingsValidDateReturnsOkWithRoomBookings()
+        {
+            // Arrange
+            DateTime validDate = DateTime.Now;
 
+            // Act
+            var result = _controller.GetRoomBookings(validDate);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(_roomBookings, okResult.Value);
+            _roomBookingProcessor.Verify(x => x.GetRoomBookings(validDate), Times.Once);
+        }
     }
 }

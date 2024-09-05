@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using RoomBookingApp.Core.Domain;
 
 namespace RoomBookingApp.Persistence
 {
+    [ExcludeFromCodeCoverage]
     public class RoomBookingAppDbContext : DbContext
 	{
         public RoomBookingAppDbContext(DbContextOptions<RoomBookingAppDbContext> options) : base(options)

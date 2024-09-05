@@ -62,6 +62,40 @@ namespace RoomBookingApp.Core.Tests
             Assert.Equal(roomBooking.RoomId, booking.RoomId);
         }
 
+        [Fact]
+        public void ShouldReturnRoomBookings()
+        {
+            //Arrange
+            var date = new DateTime(2021, 02, 02);
+
+            var options = new DbContextOptionsBuilder<RoomBookingAppDbContext>()
+                .UseInMemoryDatabase("AvailableRoomTest")
+                .Options;
+
+            using var context = new RoomBookingAppDbContext(options);
+            context.Add(new Room { Id = 1, Name = "Room 1", Price = 60, Currency = "BGN" });
+            context.Add(new Room { Id = 2, Name = "Room 2", Price = 60, Currency = "BGN" });
+            context.Add(new Room { Id = 3, Name = "Room 3", Price = 60, Currency = "BGN" });
+
+            context.Add(new RoomBooking { RoomId = 1, Date = date, Email = "test@abv.bg", FullName = "TestTestov" });
+            context.Add(new RoomBooking { RoomId = 2, Date = date.AddDays(-1), Email = "test@abv.bg", FullName = "TestTestov" });
+
+            context.SaveChanges();
+
+
+            var roomBookingService = new RoomBookingService(context);
+
+            //Act
+            var roomBookings = roomBookingService.GetRoomBookings(date);
+
+            //Assert
+            Assert.Single(roomBookings);
+            Assert.Contains(roomBookings, x => x.RoomId == 1);
+            Assert.DoesNotContain(roomBookings, x => x.RoomId == 3);
+            Assert.DoesNotContain(roomBookings, x => x.RoomId == 2);
+
+        }
+
     }
 }
 
