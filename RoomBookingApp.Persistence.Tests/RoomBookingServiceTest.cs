@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using RoomBookingApp.Core.Domain;
 using RoomBookingApp.Persistence;
@@ -94,6 +95,52 @@ namespace RoomBookingApp.Core.Tests
             Assert.DoesNotContain(roomBookings, x => x.RoomId == 3);
             Assert.DoesNotContain(roomBookings, x => x.RoomId == 2);
 
+        }
+
+        [Fact]
+        public void Validate_ShouldReturnError_WhenDateIsInThePast()
+        {
+            // Arrange
+            var model = new RoomBooking { Date = DateTime.Now.Date.AddDays(-1) };
+            var context = new ValidationContext(model);
+
+            // Act
+            var results = model.Validate(context);
+
+            // Assert
+            Assert.Single(results);
+            Assert.Equal("Date Must be In The Future", results.First().ErrorMessage);
+            Assert.Contains(nameof(RoomBooking.Date), results.First().MemberNames);
+        }
+
+        [Fact]
+        public void Validate_ShouldReturnError_WhenDateIsToday()
+        {
+            // Arrange
+            var model = new RoomBooking { Date = DateTime.Now.Date };
+            var context = new ValidationContext(model);
+
+            // Act
+            var results = model.Validate(context);
+
+            // Assert
+            Assert.Single(results);
+            Assert.Equal("Date Must be In The Future", results.First().ErrorMessage);
+            Assert.Contains(nameof(RoomBooking.Date), results.First().MemberNames);
+        }
+
+        [Fact]
+        public void Validate_ShouldNotReturnError_WhenDateIsInTheFuture()
+        {
+            // Arrange
+            var model = new RoomBooking { Date = DateTime.Now.Date.AddDays(1) };
+            var context = new ValidationContext(model);
+
+            // Act
+            var results = model.Validate(context);
+
+            // Assert
+            Assert.Empty(results);
         }
 
     }
