@@ -1,3 +1,5 @@
+# This workflow will build a .NET project and analyze it with SonarCloud
+
 name: .NET RoomBooking
 
 on:
@@ -21,40 +23,26 @@ jobs:
     - name: Install SonarScanner CLI
       run: dotnet tool install --global dotnet-sonarscanner
 
-    - name: Install dotnet coverage tool
-      run: dotnet tool install --global dotnet-coverage
-
-    - name: Install reportgenerator tool
-      run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build project
-      run: dotnet build
+    - name: Build
+      run: dotnet build --no-restore
 
-    - name: Run tests with coverage
-      run: |
-        dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults
-
-    - name: Generate OpenCover report
-      run: |
-        reportgenerator -reports:./TestResults/**/*.xml -targetdir:coverage-report -reporttypes:OpenCover
-
-    - name: Print OpenCover coverage report
-      run: cat ./TestResults/coverage.opencover.xml
+    - name: Test with coverage
+      run: dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx"
+          
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: TestResults
+        path: ./TestResults
 
     - name: Begin SonarCloud Analysis
-      run: dotnet sonarscanner begin /k:"pyankov00_RoomBookingApp.Unwe" /o:"pyankov00" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./TestResults/**/coverage.opencover.xml"
+      run: dotnet sonarscanner begin /k:"pyankov00_RoomBookingApp.Unwe" /o:"pyankov00" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.cobertura.xml"
 
     - name: Build for SonarCloud
       run: dotnet build --no-incremental
 
     - name: End SonarCloud Analysis
       run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
-    - name: Upload Test Results
-      uses: actions/upload-artifact@v3
-      with:
-        name: TestResults
-        path: ./TestResults
