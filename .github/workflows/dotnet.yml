@@ -15,45 +15,35 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-
-  analysis:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+        dotnet-version: 7.0.x
 
     - name: Install SonarScanner CLI
       run: dotnet tool install --global dotnet-sonarscanner
 
-    - name: Analyze with SonarCloud
-      uses: SonarSource/sonarcloud-github-action@v1
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test with coverage
+      run: dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx"
+
+    - name: Begin SonarCloud Analysis
+      run: dotnet sonarscanner begin /k:"pyankov00_RoomBookingApp.Unwe" /d:sonar.organization="pyankov00" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.cobertura.xml"
+
+    - name: Build for SonarCloud
+      run: dotnet build --no-incremental
+
+    - name: End SonarCloud Analysis
+      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
       with:
-        # Additional arguments for the SonarScanner CLI
-        args: |
-          -Dsonar.projectKey="pyankov00_RoomBookingApp.Unwe"
-          -Dsonar.organization="pyankov00"
-      
-    - name: Collect Code Coverage
-      run: |
-        dotnet tool install --global dotnet-coverage
-        dotnet sonarscanner begin /k:"pyankov00_RoomBookingApp.Unwe" /d:sonar.token=${{ secrets.SONAR_TOKEN }}
-        dotnet build --no-incremental
-        dotnet test --collect:"XPlat Code Coverage"
-        dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
+        name: TestResults
+        path: ./TestResults
