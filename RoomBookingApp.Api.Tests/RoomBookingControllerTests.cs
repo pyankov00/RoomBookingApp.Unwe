@@ -26,7 +26,7 @@ namespace RoomBookingApp.Api.Tests
             _roomBookings.Add(new RoomBooking { RoomId = 1, Date = new DateTime(2021, 06, 09), Email = "test@abv.bg", FullName = "TestTestov" });
 
             _roomBookingProcessor.Setup(x => x.BookRoom(_request)).Returns(_result);
-            _roomBookingProcessor.Setup(x => x.GetRoomBookings(DateTime.UtcNow)).Returns(_roomBookings);
+            _roomBookingProcessor.Setup(x => x.GetRoomBookings(new DateTime(2021, 06, 09))).Returns(_roomBookings);
         }
 
         [Theory]
@@ -103,7 +103,7 @@ namespace RoomBookingApp.Api.Tests
         public void GetRoomBookingsValidDateReturnsOkWithRoomBookings()
         {
             // Arrange
-            DateTime validDate = DateTime.Now;
+            DateTime validDate = new DateTime(2021, 06, 09);
 
             // Act
             var result = _controller.GetRoomBookings(validDate);
