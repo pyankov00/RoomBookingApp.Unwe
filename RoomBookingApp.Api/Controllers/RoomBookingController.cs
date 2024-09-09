@@ -15,7 +15,7 @@ namespace RoomBookingApp.Api.Controllers
             _roomBookingProcessor = roomBookingProcessor;
         }
 
-        [HttpPost("/book")]
+        [HttpPost("book")]
         public IActionResult BookRoom(RoomBookingRequest request)
         {
             if (ModelState.IsValid)
@@ -32,7 +32,7 @@ namespace RoomBookingApp.Api.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpGet("/rooms")]
+        [HttpGet("rooms")]
         public IActionResult GetAvailableRooms([FromQuery]DateTime date)
         {
             if (date.Date < DateTime.Now.Date)
@@ -43,7 +43,7 @@ namespace RoomBookingApp.Api.Controllers
             return Ok(_roomBookingProcessor.GetAvailableRooms(date));
         }
 
-        [HttpGet("/roomBookings")]
+        [HttpGet("roomBookings")]
         public IActionResult GetRoomBookings([FromQuery] DateTime date)
         {
             return Ok(_roomBookingProcessor.GetRoomBookings(date));
