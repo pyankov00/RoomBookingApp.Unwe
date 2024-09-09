@@ -15,7 +15,7 @@ namespace RoomBookingApp.Api.Tests
         private readonly RoomBookingController _controller;
         private readonly RoomBookingRequest _request;
         private readonly RoomBokingResult _result;
-        private readonly List<RoomBooking> _roomBookings = new List<RoomBooking>();
+        private readonly List<RoomBooking> _roomBookings = new();
 
         public RoomBookingControllerTests()
         {
@@ -72,7 +72,7 @@ namespace RoomBookingApp.Api.Tests
         {
             // Arrange
             DateTime todayDate = DateTime.Now.Date;
-            var availableRooms = new List<Room>(); // Assuming Room is a model class
+            var availableRooms = new List<Room>(); 
             _roomBookingProcessor.Setup(x => x.GetAvailableRooms(todayDate)).Returns(availableRooms);
 
             // Act
@@ -88,7 +88,7 @@ namespace RoomBookingApp.Api.Tests
         {
             // Arrange
             DateTime futureDate = DateTime.Now.AddDays(1);
-            var availableRooms = new List<Room>(); // Assuming Room is a model class
+            var availableRooms = new List<Room>(); 
             _roomBookingProcessor.Setup(x => x.GetAvailableRooms(futureDate)).Returns(availableRooms);
 
             // Act
