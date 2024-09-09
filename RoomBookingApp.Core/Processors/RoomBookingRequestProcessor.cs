@@ -53,7 +53,7 @@ namespace RoomBookingApp.Core.Processors
         public IEnumerable<RoomBooking> GetRoomBookings(DateTime date)
          => _roomBookingService.GetRoomBookings(date);
 
-        private TRoomBooking CreateRoomBookingObject<TRoomBooking>(RoomBookingRequest roomBookingRequest)
+        private static TRoomBooking CreateRoomBookingObject<TRoomBooking>(RoomBookingRequest roomBookingRequest)
             where TRoomBooking : RoomBookingBase, new()
         {
             return new TRoomBooking
